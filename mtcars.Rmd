@@ -1,0 +1,51 @@
+---
+title: "Compare MPG between automatic and manual transmission cars"
+author: "Sau-Chin Chen"
+date: "Thursday, March 12, 2015"
+output: html_document
+---
+
+```{r loadRequired, echo=FALSE, results='hide', message=FALSE, warning=FALSE}
+library(MASS)
+```
+
+exploratory data analyses
+
+```{r plot, echo=FALSE, results='asis'}
+pairs(mtcars, panel = panel.smooth, main = "mtcars data",     col = 3 + mtcars$am)
+```
+
+Coefficients interpretation
+
+Factor Transform 
+```{r FacInterpretatioon, echo=TRUE, results='hide'}
+mtcars1 <- mtcars
+mtcars1$cyl <- as.factor(mtcars1$cyl)
+mtcars1$vs <- as.factor(mtcars1$vs)
+mtcars1$am <- as.factor(mtcars1$am)
+mtcars1$gear <- as.factor(mtcars1$gear)
+mtcars1$carb <- as.factor(mtcars1$carb)
+all <- lm(mpg ~ . , data=mtcars1)
+summary(all)
+```
+
+Variable Selection
+```{r fit, echo=TRUE, results='hide', warning=FALSE, message=FALSE}
+fit <- stepAIC(all, direction="both")
+```
+
+Diagnostics
+```{r diag, echo=FALSE, results='asis', fig.height=480 }
+layout(matrix(c(1,2,3,4),2,2))
+plot(fit)
+```
+
+Compare
+```{r Conclusion, echo=TRUE, results='hide', message=FALSE, warning=FALSE}
+round( as.numeric(unlist(t.test(mpg ~ am, mtcars1))[1]) , digits=2)
+t.test(mpg ~ am, mtcars1[c(1:16,19,21:32),])
+#rownames(mtcars)[17]
+#rownames(mtcars)[18]
+#rownames(mtcars)[20]
+```
+
