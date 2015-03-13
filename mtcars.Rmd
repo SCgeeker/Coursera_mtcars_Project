@@ -1,7 +1,7 @@
 ---
 title: "Compare MPG between automatic and manual transmission cars"
-author: "Sau-Chin Chen"
-date: "Thursday, March 12, 2015"
+author:
+date:
 output: html_document
 ---
 ### Overview
@@ -42,9 +42,13 @@ plot(fit)
 ```
 ###Conclusion
 We compared the MPG between automatic and manual transmission in use of t test. Both T tests with and without outliers showed the same result that the mannual cars perfomred better on MPG than the automatic cars.  
-With the reservation of outliers, the average MPG for automatic car was **`r round( as.numeric(unlist(t.test(mpg ~ am, mtcars1))[6]) , digits=2)`** and the average MPG for mannual car was **`r round( as.numeric(unlist(t.test(mpg ~ am, mtcars1))[7]) , digits=2)`**. The statistical value was t(**`r round( as.numeric(unlist(t.test(mpg ~ am, mtcars1))[2]) , digits=2)`**) = **`r round( as.numeric(unlist(t.test(mpg ~ am, mtcars1))[1]) , digits=2)`**, p value = **`r round( as.numeric(unlist(t.test(mpg ~ am, mtcars1))[3]) , digits=2)`**.  
-Without the outliers, the average MPG for automatic car was **`r round( as.numeric(unlist(t.test(mpg ~ am, mtcars1[c(1:16,19,21:32),]))[6]) , digits=2)`** and the average MPG for mannual car was **`r round( as.numeric(unlist(t.test(mpg ~ am, mtcars1[c(1:16,19,21:32),]))[7]) , digits=2)`**. The statistical value was t(**`r round( as.numeric(unlist(t.test(mpg ~ am, mtcars1[c(1:16,19,21:32),]))[2]) , digits=2)`**) = **`r round( as.numeric(unlist(t.test(mpg ~ am, mtcars1[c(1:16,19,21:32),]))[1]) , digits=2)`**, p value = **`r round( as.numeric(unlist(t.test(mpg ~ am, mtcars1[c(1:16,19,21:32),]))[3]) , digits=2)`**. 
-
-###Note
+With the reservation of outliers, the average MPG for automatic car was **`r round( as.numeric(unlist(t.test(mpg ~ am, var.equal = TRUE, mtcars1))[6]) , digits=2)`** and the average MPG for mannual car was **`r round( as.numeric(unlist(t.test(mpg ~ am,var.equal = TRUE, mtcars1))[7]) , digits=2)`**. The statistical value was t(**`r round( as.numeric(unlist(t.test(mpg ~ am, var.equal = TRUE,mtcars1))[2]) , digits=2)`**) = **`r round( as.numeric(unlist(t.test(mpg ~ am, var.equal = TRUE,mtcars1))[1]) , digits=2)`**, p value **`r if(unlist(t.test(mpg ~ am, var.equal = TRUE,mtcars1[c(1:16,19,21:32),]))[3] < .05){ c("< .05") }else{c("> .05")}`**.  
+Without the outliers, the average MPG for automatic car was **`r round( as.numeric(unlist(t.test(mpg ~ am, var.equal = TRUE,mtcars1[c(1:16,19,21:32),]))[6]) , digits=2)`** and the average MPG for mannual car was **`r round( as.numeric(unlist(t.test(mpg ~ am, var.equal = TRUE,mtcars1[c(1:16,19,21:32),]))[7]) , digits=2)`**. The statistical value was t(**`r round( as.numeric(unlist(t.test(mpg ~ am, var.equal = TRUE,mtcars1[c(1:16,19,21:32),]))[2]) , digits=2)`**) = **`r round( as.numeric(unlist(t.test(mpg ~ am, var.equal = TRUE,mtcars1[c(1:16,19,21:32),]))[1]) , digits=2)`**, p value **`r if(unlist(t.test(mpg ~ am, var.equal = TRUE,mtcars1[c(1:16,19,21:32),]))[3] < .05){ c("< .05") }else{ c("> .05")}`**. 
 
 
+###Appendix
+**Bold words** are codes embeded in line. Below column shows two examples we used in this report.
+```
+Through the diagnosis of this model, we picked up three outliers ** r rownames(mtcars)[c(17, 18, 20)] ** from the dataset.   
+...the average MPG for automatic car was ** r round( as.numeric(unlist(t.test(mpg ~ am, var.equal = TRUE,mtcars1))[6]) , digits=2) **...
+```
