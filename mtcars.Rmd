@@ -4,21 +4,20 @@ author: "Sau-Chin Chen"
 date: "Thursday, March 12, 2015"
 output: html_document
 ---
-
+### Overview
+In this report we demonstrated the process to isolate the fittest model for the `mtcars` dataset. Through the diagnosis of this model, we picked up three outliers **`r rownames(mtcars)[c(17, 18, 20)]`** from the dataset. The comparison of transimission types `am` on the miles per gallon `mpg` was evaluated from the reservation of outliers to the removal of outliers. At the initiation of this process, we called the package `MASS`.  
 ```{r loadRequired, echo=FALSE, results='hide', message=FALSE, warning=FALSE}
 library(MASS)
 ```
-
-exploratory data analyses
-
-```{r plot, echo=FALSE, results='asis'}
+### Exploratory Data Analyses
+Firstly we explored the correlations for each pair of variables in `mtcars` dataset. As the below plot presented, five variables are categorical variables.  
+```{r plot, echo=FALSE, results='asis', fig.align='center'}
 pairs(mtcars, panel = panel.smooth, main = "mtcars data",     col = 3 + mtcars$am)
 ```
 
-Coefficients interpretation
+The original `mtcars` dataset was duplicated to the set `mtcars1` and transformed the five categorical variables into the `factor` class. The model included all variables was summarized and stored in `all`:
 
-Factor Transform 
-```{r FacInterpretatioon, echo=TRUE, results='hide'}
+```{r FacInterpretatioon, echo=TRUE, results='markup'}
 mtcars1 <- mtcars
 mtcars1$cyl <- as.factor(mtcars1$cyl)
 mtcars1$vs <- as.factor(mtcars1$vs)
@@ -26,26 +25,26 @@ mtcars1$am <- as.factor(mtcars1$am)
 mtcars1$gear <- as.factor(mtcars1$gear)
 mtcars1$carb <- as.factor(mtcars1$carb)
 all <- lm(mpg ~ . , data=mtcars1)
-summary(all)
 ```
-
-Variable Selection
+###Variable Selection
+The fittest model was decided by the smallest AIC in use of the stepwise algorithm. The smallest AIC was searched through `both` directions. The fittest model has three predictors `wt`, `qsec`, and `am`.
 ```{r fit, echo=TRUE, results='hide', warning=FALSE, message=FALSE}
 fit <- stepAIC(all, direction="both")
 ```
-
-Diagnostics
-```{r diag, echo=FALSE, results='asis', fig.height=480 }
+```{r fitsum, echo=FALSE, results='markup', warning=FALSE, message=FALSE}
+summary(fit)$coef
+```
+###Diagnostics of Residuals
+Below plots showed that the residuals of observations mostly match the normalization assumption in addition to `r rownames(mtcars)[c(17, 18, 20)]`. The plot comparing resesuals and leverages indicate the three observations contributed the least influence to the model. Therefore, we indicated `r rownames(mtcars)[c(17, 18, 20)]` as the outliers of `mtcars` dataset.
+```{r diag, echo=FALSE, results='asis', fig.align='center' }
 layout(matrix(c(1,2,3,4),2,2))
 plot(fit)
 ```
+###Conclusion
+We compared the MPG between automatic and manual transmission in use of t test. Both T tests with and without outliers showed the same result that the mannual cars perfomred better on MPG than the automatic cars.  
+With the reservation of outliers, the average MPG for automatic car was **`r round( as.numeric(unlist(t.test(mpg ~ am, mtcars1))[6]) , digits=2)`** and the average MPG for mannual car was **`r round( as.numeric(unlist(t.test(mpg ~ am, mtcars1))[7]) , digits=2)`**. The statistical value was t(**`r round( as.numeric(unlist(t.test(mpg ~ am, mtcars1))[2]) , digits=2)`**) = **`r round( as.numeric(unlist(t.test(mpg ~ am, mtcars1))[1]) , digits=2)`**, p value = **`r round( as.numeric(unlist(t.test(mpg ~ am, mtcars1))[3]) , digits=2)`**.  
+Without the outliers, the average MPG for automatic car was **`r round( as.numeric(unlist(t.test(mpg ~ am, mtcars1[c(1:16,19,21:32),]))[6]) , digits=2)`** and the average MPG for mannual car was **`r round( as.numeric(unlist(t.test(mpg ~ am, mtcars1[c(1:16,19,21:32),]))[7]) , digits=2)`**. The statistical value was t(**`r round( as.numeric(unlist(t.test(mpg ~ am, mtcars1[c(1:16,19,21:32),]))[2]) , digits=2)`**) = **`r round( as.numeric(unlist(t.test(mpg ~ am, mtcars1[c(1:16,19,21:32),]))[1]) , digits=2)`**, p value = **`r round( as.numeric(unlist(t.test(mpg ~ am, mtcars1[c(1:16,19,21:32),]))[3]) , digits=2)`**. 
 
-Compare
-```{r Conclusion, echo=TRUE, results='hide', message=FALSE, warning=FALSE}
-round( as.numeric(unlist(t.test(mpg ~ am, mtcars1))[1]) , digits=2)
-t.test(mpg ~ am, mtcars1[c(1:16,19,21:32),])
-#rownames(mtcars)[17]
-#rownames(mtcars)[18]
-#rownames(mtcars)[20]
-```
+###Note
+
 
