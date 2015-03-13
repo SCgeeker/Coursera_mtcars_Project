@@ -5,7 +5,7 @@ date:
 output: html_document
 ---
 In this report I demonstrated the process to isolate the fittest model for the `mtcars` dataset. Through the diagnosis of this model, I picked up three outliers **`r rownames(mtcars)[c(17, 18, 20)]`** from the dataset. The comparison of transimission types `am` on the miles per gallon `mpg` was evaluated from the reservation of outliers to the removal of outliers. At the initiation of this process, I called the package `MASS`.  
-```{r loadRequired, echo=FALSE, results='hide', message=FALSE, warning=FALSE}
+```{r loadRequired, cache=TRUE, echo=FALSE, results='hide', message=FALSE, warning=FALSE}
 library(MASS)
 ```
 ### Exploratory Data Analyses
@@ -27,14 +27,14 @@ all <- lm(mpg ~ . , data=mtcars1)
 ```
 ### Variable Selection
 The fittest model was decided by the smallest AIC computed by the stepwise algorithm. The smallest AIC was acquried through `both` directions. Three predictors `wt`, `qsec`, and `am` were selected in the fittest model.  
-```{r fit, echo=TRUE, results='hide', warning=FALSE, message=FALSE}
+```{r fit, cache=TRUE, echo=TRUE, results='hide', warning=FALSE, message=FALSE}
 fit <- stepAIC(all, direction="both")
 ```
-```{r fitsum, echo=FALSE, results='markup', warning=FALSE, message=FALSE}
-summary(fit)$coef
+```{r fitsum, cache=TRUE, echo=FALSE, results='markup', warning=FALSE, message=FALSE}
+summary(lm(mpg ~ wt + qsec + am, mtcars1))$coef
 ```
 ### Diagnostics of Residuals
-Below plots illustrated that the residuals of most observations match the normalization assumption in addition to `r rownames(mtcars)[c(17, 18, 20)]`. The plot comparing resesuals and leverages indicate the three observations contributed the least influence to the model. Therefore, I indicated `r rownames(mtcars)[c(17, 18, 20)]` as the outliers of `mtcars` dataset.  
+Below plots illustrated that the residuals of most observations obey the normalization assumption in addition to **`r rownames(mtcars)[c(17, 18, 20)]`**. The plot compared resesuals and leverages indicates that the three observations contributed the least influence. Therefore, I indicated **`r rownames(mtcars)[c(17, 18, 20)]`** as the outliers of `mtcars` dataset.  
 ```{r diag, echo=FALSE, results='asis', fig.align='center' }
 layout(matrix(c(1,2,3,4),2,2))
 plot(fit)
