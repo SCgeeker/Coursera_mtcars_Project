@@ -5,16 +5,16 @@ date:
 output: html_document
 ---
 In this report I demonstrated the process to isolate the fittest model for the `mtcars` dataset. Through the diagnosis of this model, I picked up three outliers **`r rownames(mtcars)[c(17, 18, 20)]`** from the dataset. The comparison of transimission types `am` on the miles per gallon `mpg` was evaluated from the reservation of outliers to the removal of outliers. At the initiation of this process, I called the package `MASS`.  
-```{r loadRequired, cache=TRUE, echo=FALSE, results='hide', message=FALSE, warning=FALSE}
+```{r loadRequired, echo=FALSE, results='hide', message=FALSE, warning=FALSE}
 library(MASS)
 ```
 ### Exploratory Data Analyses
-Firstly I explored the correlations for each pair of variables in `mtcars` dataset. As the below plot presented, five variables are categorical variables.  
+Firstly I explored the correlations for each pair of variables in `mtcars` dataset. As the below plot presented, `cyl`, `vs`, `am`, `gear`, and `carb` are categorical variables.  
 ```{r plot, echo=FALSE, results='asis', fig.align='center'}
 pairs(mtcars, panel = panel.smooth, col = 3 + mtcars$am)
 ```
 
-The original `mtcars` dataset was duplicated to the set `mtcars1` and the five categorical variables were transformed into `factor`. The model included all variables was stored in `all`:
+The original `mtcars` dataset was duplicated to new dataset `mtcars1` and the five categorical variables were transformed into `factor`. The model included all variables was stored in `all`:
 
 ```{r FacInterpretatioon, echo=TRUE, results='markup'}
 mtcars1 <- mtcars
@@ -27,25 +27,25 @@ all <- lm(mpg ~ . , data=mtcars1)
 ```
 ### Variable Selection
 The fittest model was decided by the smallest AIC computed by the stepwise algorithm. The smallest AIC was acquried through `both` directions. Three predictors `wt`, `qsec`, and `am` were selected in the fittest model.  
-```{r fit, cache=TRUE, echo=TRUE, results='hide', warning=FALSE, message=FALSE}
+```{r fit, echo=TRUE, results='hide', warning=FALSE, message=FALSE}
 fit <- stepAIC(all, direction="both")
 ```
-```{r fitsum, cache=TRUE, echo=FALSE, results='markup', warning=FALSE, message=FALSE}
+```{r fitsum, echo=FALSE, results='markup', warning=FALSE, message=FALSE}
 summary(lm(mpg ~ wt + qsec + am, mtcars1))$coef
 ```
 ### Diagnostics of Residuals
-Below plots illustrated that the residuals of most observations obey the normalization assumption in addition to **`r rownames(mtcars)[c(17, 18, 20)]`**. The plot compared resesuals and leverages indicates that the three observations contributed the least influence. Therefore, I indicated **`r rownames(mtcars)[c(17, 18, 20)]`** as the outliers of `mtcars` dataset.  
+Below plots illustrated that the residuals of most observations obey the normalization assumption exceot **`r rownames(mtcars)[c(17, 18, 20)]`**. The plot compared resesuals and leverages indicates that the three observations contributed the least influence to the fittest model. Therefore, I indicated **`r rownames(mtcars)[c(17, 18, 20)]`** as the outliers of `mtcars` dataset.  
 ```{r diag, echo=FALSE, results='asis', fig.align='center' }
 layout(matrix(c(1,2,3,4),2,2))
 plot(fit)
 ```
-To decrease the uncertainty of our conclusion, I compared the MPG betIen automatic and manual transmission in use of t test. Both T tests with and without outliers shoId the significant result that the mannual cars perfomred better on MPG than the automatic cars. I set sigificant level at `.05`.   
-With the reservation of outliers, the average MPG for automatic car was **`r round( as.numeric(unlist(t.test(mpg ~ am, var.equal = TRUE, mtcars1))[6]) , digits=2)`** and the average MPG for mannual car was **`r round( as.numeric(unlist(t.test(mpg ~ am,var.equal = TRUE, mtcars1))[7]) , digits=2)`**. The statistical value was t(**`r round( as.numeric(unlist(t.test(mpg ~ am, var.equal = TRUE,mtcars1))[2]) , digits=2)`**) = **`r round( as.numeric(unlist(t.test(mpg ~ am, var.equal = TRUE,mtcars1))[1]) , digits=2)`**, p value **`r if(unlist(t.test(mpg ~ am, var.equal = TRUE,mtcars1))[3] < .05){ c("< .05") }else{c("> .05")}`**.  
-Without the outliers, the average MPG for automatic car was **`r round( as.numeric(unlist(t.test(mpg ~ am, var.equal = TRUE,mtcars1[c(1:16,19,21:32),]))[6]) , digits=2)`** and the average MPG for mannual car was **`r round( as.numeric(unlist(t.test(mpg ~ am, var.equal = TRUE,mtcars1[c(1:16,19,21:32),]))[7]) , digits=2)`**. The statistical value was t(**`r round( as.numeric(unlist(t.test(mpg ~ am, var.equal = TRUE,mtcars1[c(1:16,19,21:32),]))[2]) , digits=2)`**) = **`r round( as.numeric(unlist(t.test(mpg ~ am, var.equal = TRUE,mtcars1[c(1:16,19,21:32),]))[1]) , digits=2)`**, p value **`r if(unlist(t.test(mpg ~ am, var.equal = TRUE,mtcars1[c(1:16,19,21:32),]))[3] < .05){ c("< .05") }else{ c("> .05")}`**.  
+To decrease the uncertainty of my conclusion, I compared the MPG between automatic and manual transmission in use of t test. Both t tests, with and without outliers, showed the significant result that the mannual cars perfomred better on MPG than the automatic cars. I set sigificant level at `.05`.   
+With the reservation of outliers, the average MPG for automatic car was **`r round( as.numeric(unlist(t.test(mpg ~ am, var.equal = TRUE, mtcars1))[6]) , digits=2)`** and the average MPG for mannual car was **`r round( as.numeric(unlist(t.test(mpg ~ am,var.equal = TRUE, mtcars1))[7]) , digits=2)`**. The statistical value was t(**`r round( as.numeric(unlist(t.test(mpg ~ am, var.equal = TRUE,mtcars1))[2]) , digits=2)`**) = **`r round( as.numeric(unlist(t.test(mpg ~ am, var.equal = TRUE,mtcars1))[1]) , digits=2)`**, p value **`r if(unlist(t.test(mpg ~ am, var.equal = TRUE,mtcars1))[3] < .05){ c("< .05") }else{c("> .05")}`**. That difference of MPG **`r round( as.numeric(unlist(t.test(mpg ~ am,var.equal = TRUE, mtcars1))[7]) - as.numeric(unlist(t.test(mpg ~ am,var.equal = TRUE, mtcars1))[6]) , digits=2)`** supports the better MPG for the automatic transmission.  
+After excluded the outliers, the average MPG for automatic car was **`r round( as.numeric(unlist(t.test(mpg ~ am, var.equal = TRUE,mtcars1[c(1:16,19,21:32),]))[6]) , digits=2)`** and the average MPG for mannual car was **`r round( as.numeric(unlist(t.test(mpg ~ am, var.equal = TRUE,mtcars1[c(1:16,19,21:32),]))[7]) , digits=2)`**. The statistical value was t(**`r round( as.numeric(unlist(t.test(mpg ~ am, var.equal = TRUE,mtcars1[c(1:16,19,21:32),]))[2]) , digits=2)`**) = **`r round( as.numeric(unlist(t.test(mpg ~ am, var.equal = TRUE,mtcars1[c(1:16,19,21:32),]))[1]) , digits=2)`**, p value **`r if(unlist(t.test(mpg ~ am, var.equal = TRUE,mtcars1[c(1:16,19,21:32),]))[3] < .05){ c("< .05") }else{ c("> .05")}`**. That difference of MPG **`r round( as.numeric(unlist(t.test(mpg ~ am,var.equal = TRUE, mtcars1[c(1:16,19,21:32),]))[7]) - as.numeric(unlist(t.test(mpg ~ am,var.equal = TRUE, mtcars1[c(1:16,19,21:32),]))[6]) , digits=2)`** supports the better MPG for the automatic transmission.  
 
-### Appendix
+### Note
 **Bold words** are produced by the codes embeded in line. Below column shows two examples I used in this report.  
 ```
-Through the diagnosis of this model, I picked up three outliers ** r rownames(mtcars)[c(17, 18, 20)] ** from the dataset.   
-...the average MPG for automatic car was ** r round( as.numeric(unlist(t.test(mpg ~ am, var.equal = TRUE,mtcars1))[6]) , digits=2) **...
+Through the diagnosis of this model, I picked up three outliers **r rownames(mtcars)[c(17, 18, 20)]** from the dataset.   
+...the average MPG for automatic car was **r round( as.numeric(unlist(t.test(mpg ~ am, var.equal = TRUE,mtcars1))[6]) , digits=2)**...
 ```
