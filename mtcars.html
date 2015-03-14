@@ -8,7 +8,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 
-<meta name="author" content />
+<meta name="author" content="null" />
 
 
 <title>Compare MPG between automatic and manual transmission cars</title>
@@ -62,6 +62,8 @@ img {
 
 <div id="header">
 <h1 class="title">Compare MPG between automatic and manual transmission cars</h1>
+<h4 class="author"><em>null</em></h4>
+<h4 class="date"><em>null</em></h4>
 </div>
 
 
@@ -119,8 +121,8 @@ summary(fit)$coef</code></pre>
 <div id="note" class="section level3">
 <h3>Note</h3>
 <p><strong>Bold words</strong> are produced by the codes embeded in line. Below column shows two examples I used in this report.</p>
-<pre><code>Through the diagnosis of this model, I picked up three outliers **r rownames(mtcars)[c(17, 18, 20)]** from the dataset.   
-...the average MPG for automatic car was **r round( as.numeric(unlist(t.test(mpg ~ am, var.equal = TRUE,mtcars1))[6]) , digits=2)**...</code></pre>
+<pre><code>Through the diagnosis of this model, I picked up three outliers **`r` rownames(mtcars)[c(17, 18, 20)]`** from the dataset.   
+...the average MPG for automatic car was **`r` round( as.numeric(unlist(t.test(mpg ~ am, var.equal = TRUE,mtcars1))[6]) , digits=2)`**...</code></pre>
 </div>
 <div id="appendix" class="section level3">
 <h3>Appendix</h3>

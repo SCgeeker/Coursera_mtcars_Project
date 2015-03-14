@@ -1,7 +1,7 @@
 ---
 title: "Compare MPG between automatic and manual transmission cars"
-author:
-date:
+author: 'null'
+date: 'null'
 output: html_document
 ---
 In this report I demonstrated the process to isolate the fittest model for the `mtcars` dataset. Through the diagnosis of this model, I picked up three outliers **`r rownames(mtcars)[c(17, 18, 20)]`** from the dataset. The comparison of transimission types `am` on the miles per gallon `mpg` was evaluated from the reservation of outliers to the removal of outliers. At the initiation of this process, I called the package `MASS`.  
@@ -43,8 +43,8 @@ After excluded the outliers, the average MPG for automatic car was **`r round( a
 ### Note
 **Bold words** are produced by the codes embeded in line. Below column shows two examples I used in this report.  
 ```
-Through the diagnosis of this model, I picked up three outliers **r rownames(mtcars)[c(17, 18, 20)]** from the dataset.   
-...the average MPG for automatic car was **r round( as.numeric(unlist(t.test(mpg ~ am, var.equal = TRUE,mtcars1))[6]) , digits=2)**...
+Through the diagnosis of this model, I picked up three outliers **`r` rownames(mtcars)[c(17, 18, 20)]`** from the dataset.   
+...the average MPG for automatic car was **`r` round( as.numeric(unlist(t.test(mpg ~ am, var.equal = TRUE,mtcars1))[6]) , digits=2)`**...
 ```
 
 ### Appendix
